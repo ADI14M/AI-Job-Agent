@@ -21,3 +21,5 @@ beautifulsoup4
 alembic
 python-docx
 numpy
+python-multipart
+fpdf2

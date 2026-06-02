@@ -79,7 +79,7 @@ def test_semantic_matching_engine(mock_llm_provider, mock_embeddings):
     mock_llm_provider.generate_structured_output.return_value = mock_llm_breakdown
     
     # Create mock Resume and Job objects
-    mock_resume = Resume(id=1, parsed_data=GOLDEN_RESUME_DATA)
+    mock_resume = Resume(id=1, user_id=1, parsed_data=GOLDEN_RESUME_DATA)
     mock_job = Job(id=1, parsed_data=MOCK_JOB_DATA)
     
     match_response = evaluate_match(mock_resume, mock_job, provider_name="openai")

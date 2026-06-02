@@ -7,19 +7,23 @@ from app.db.models.job import Job
 from app.agents.matching_agent import evaluate_match
 from app.schemas.matching import MatchingResponse, MatchingRequest
 
+from app.db.models.user import User
+from app.api.deps import get_current_active_user
+
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 @router.post("/", response_model=MatchingResponse)
 def match_resume_to_job(
     request: MatchingRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Evaluate a specific Resume against a specific Job Description.
     Calculates semantic similarity and uses an LLM to evaluate Skills, Experience, Education, and Keywords.
     """
-    resume = db.query(Resume).filter(Resume.id == request.resume_id).first()
+    resume = db.query(Resume).filter(Resume.id == request.resume_id, Resume.user_id == current_user.id).first()
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
         

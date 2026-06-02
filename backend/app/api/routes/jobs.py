@@ -1,30 +1,82 @@
 import logging
-from fastapi import APIRouter, Depends, HTTPException, Query
+import os
+import shutil
+import requests
+from bs4 import BeautifulSoup
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.agents.jd_agent import process_and_store_job
 from app.db.models.job import Job, JobEmbedding
-from app.schemas.job import JobResponse, JobCreate
+from app.schemas.job import JobResponse
+from app.utils.text_extraction import extract_text
+from typing import Optional
+from app.db.models.user import User
+from app.api.deps import get_current_active_user
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-@router.post("/", response_model=JobResponse)
-def create_and_parse_job(
-    job_in: JobCreate,
-    db: Session = Depends(get_db)
+UPLOAD_DIR = "/app/data/sample_jds"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+def extract_text_from_url(url: str) -> str:
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "html.parser")
+        return soup.get_text(separator="\n", strip=True)
+    except Exception as e:
+        logger.error(f"Failed to extract text from URL {url}: {e}")
+        raise ValueError(f"Could not extract content from URL: {e}")
+
+@router.post("/upload", response_model=JobResponse)
+async def upload_job(
+    file: Optional[UploadFile] = File(None),
+    raw_text: Optional[str] = Form(None),
+    apply_url: Optional[str] = Form(None),
+    provider: str = Form("openai"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
-    Submit a raw Job Description, parse it into structured data using LLMs,
-    generate vector embeddings in ChromaDB, and save to PostgreSQL.
+    Submit a JD via File (PDF, DOCX, TXT), Raw Text, or URL.
+    Parses into structured data using LLMs, generates embeddings, and saves to PostgreSQL.
     """
-    try:
-        parsed_data, doc_id = process_and_store_job(job_in.raw_text, provider_name=job_in.provider)
+    jd_text = ""
+    
+    if file:
+        if not file.filename.endswith(('.pdf', '.docx', '.doc', '.txt')):
+            raise HTTPException(status_code=400, detail="Only PDF, DOCX, and TXT files are allowed")
+            
+        file_path = os.path.join(UPLOAD_DIR, file.filename)
+        try:
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            
+            if file.filename.endswith('.txt'):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    jd_text = f.read()
+            else:
+                jd_text = extract_text(file_path)
+        except Exception as e:
+            logger.error(f"Failed to process file {file.filename}: {e}")
+            raise HTTPException(status_code=500, detail="Could not process the uploaded file.")
+            
+    elif raw_text:
+        jd_text = raw_text
+    elif apply_url:
+        jd_text = extract_text_from_url(apply_url)
+    else:
+        raise HTTPException(status_code=400, detail="Must provide either a file, raw_text, or apply_url")
         
-        # Save to DB
+    try:
+        parsed_data, doc_id = process_and_store_job(jd_text, provider_name=provider)
+        
         db_job = Job(
-            apply_url=job_in.apply_url,
-            raw_text=job_in.raw_text,
+            user_id=current_user.id,
+            apply_url=apply_url,
+            raw_text=jd_text,
             title=parsed_data.title,
             company=parsed_data.company,
             location=parsed_data.location,
@@ -42,11 +94,9 @@ def create_and_parse_job(
             
         db.commit()
         db.refresh(db_job)
-        
         return db_job
         
     except ValueError as ve:
-        logger.warning(f"Validation error during JD processing: {ve}")
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"Unexpected error processing JD: {e}")

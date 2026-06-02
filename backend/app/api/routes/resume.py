@@ -7,6 +7,8 @@ from app.db.session import get_db
 from app.services.resume_service import process_and_store_resume
 from app.db.models.resume import Resume, ResumeEmbedding
 from app.schemas.resume import ResumeResponse
+from app.db.models.user import User
+from app.api.deps import get_current_active_user
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -19,7 +21,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 async def upload_resume(
     file: UploadFile = File(...), 
     provider: str = Query("openai", description="LLM provider to use for parsing"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Upload a PDF or DOCX resume, extract its text, parse it using the chosen LLM provider,
@@ -38,8 +41,7 @@ async def upload_resume(
         raise HTTPException(status_code=500, detail="Could not save file to disk")
         
     try:
-        # Mock user ID = 1 for now until auth is implemented
-        user_id = 1 
+        user_id = current_user.id  
         
         # Process resume via LLM and VectorDB
         raw_text, parsed_data, doc_id = process_and_store_resume(file_path, user_id, provider_name=provider)

@@ -138,3 +138,144 @@ Evaluates a specific Resume against a specific Job Description. It combines sema
 **Errors:**
 - `404 Not Found`: If either the `resume_id` or `job_id` does not exist in PostgreSQL.
 - `400 Bad Request`: If the LLM abstraction fails to parse the structured response.
+
+---
+
+## Phase 7: Cover Letter Engine
+
+### `POST /api/v1/cover_letter/`
+
+**Description:**
+Generate a tailored cover letter using the candidate's Resume and target Job Description.
+
+**Request Body (application/json):**
+```json
+{
+  "resume_id": 1,
+  "job_id": 1,
+  "company_name": "TechCorp",
+  "provider": "openai"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "resume_id": 1,
+  "job_id": 1,
+  "content": "Dear Hiring Manager at TechCorp...",
+  "file_path": null,
+  "created_at": "2026-06-02T10:00:00Z"
+}
+```
+---
+
+## Phase 6: Resume Optimization Engine
+
+### `POST /api/v1/resume_optimizer/`
+
+**Description:**
+Generate an optimized Resume targeted at a specific role without fabricating experience. Evaluates the base resume and outputs an optimized version matching the standard Resume schema.
+
+**Request Body (application/json):**
+```json
+{
+  "base_resume_id": 1,
+  "target_role": "AI Engineer",
+  "provider": "openai"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "base_resume_id": 1,
+  "target_role": "AI Engineer",
+  "optimized_data": {
+    "name": "Aditya M",
+    "summary": "Optimized for AI Engineer..."
+  },
+  "file_path": null,
+  "created_at": "2026-06-02T10:00:00Z"
+}
+```
+---
+
+## Phase 5: Skill Gap Engine
+
+### `POST /api/v1/skill_gap/`
+
+**Description:**
+Compare a candidate's Resume with the target Job Description to identify all missing Skills, Technologies, Tools, and Certifications, classified by priority (Critical, Important, Optional).
+
+**Request Body (application/json):**
+```json
+{
+  "resume_id": 1,
+  "job_id": 1,
+  "provider": "openai"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "resume_id": 1,
+  "job_id": 1,
+  "report_data": {
+    "missing_items": [
+      {
+        "name": "Docker",
+        "priority": "Critical",
+        "category": "Tool"
+      }
+    ]
+  },
+  "created_at": "2026-06-02T10:00:00Z"
+}
+```
+---
+
+## Phase 4: ATS Analysis Engine
+
+### `POST /api/v1/ats/`
+
+**Description:**
+Analyze a Resume against strict ATS rules (Formatting, Action Verbs, Section Completeness, etc.). Can optionally take a Job ID to analyze in the context of a JD.
+
+**Request Body (application/json):**
+```json
+{
+  "resume_id": 1,
+  "job_id": null,
+  "provider": "openai"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "resume_id": 1,
+  "job_id": null,
+  "overall_score": 85.0,
+  "breakdown": {
+    "formatting_score": 18.0,
+    "length_score": 10.0,
+    "section_completeness_score": 15.0,
+    "action_verbs_score": 17.0,
+    "quantified_achievements_score": 25.0
+  },
+  "recommendations": [
+    {
+      "category": "Experience",
+      "priority": "Critical",
+      "suggestion": "Add experience section"
+    }
+  ],
+  "created_at": "2026-06-02T10:00:00Z"
+}
+```
