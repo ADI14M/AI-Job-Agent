@@ -8,6 +8,11 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
+from app.db.session import Base, engine
+
+# Initialize Database (Auto-create tables for SQLite/Postgres)
+Base.metadata.create_all(bind=engine)
+
 # Set up CORS middleware
 app.add_middleware(
     CORSMiddleware,

@@ -22,7 +22,12 @@ class Settings(BaseSettings):
     
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
-        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        # Default to SQLite for easy local execution without Postgres/Docker
+        import os
+        db_url = os.environ.get("DATABASE_URL")
+        if db_url:
+            return db_url
+        return "sqlite:///./job_agent.db"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
