@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "sonner"
 
+import ErrorBoundary from "@/components/layout/ErrorBoundary"
+import GlobalAuthListener from "@/components/layout/GlobalAuthListener"
 import AuthLayout from "@/components/layout/AuthLayout"
 import DashboardLayout from "@/components/layout/DashboardLayout"
 import ProtectedRoute from "@/components/layout/ProtectedRoute"
@@ -18,29 +20,32 @@ const queryClient = new QueryClient()
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Route>
-          
-          <Route element={<ProtectedRoute />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/resumes" element={<Resumes />} />
-              <Route path="/jobs" element={<JobDiscovery />} />
-              <Route path="/applications" element={<Applications />} />
-              <Route path="/settings" element={<Settings />} />
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <GlobalAuthListener />
+          <Routes>
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Route>
-          </Route>
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
-      <Toaster position="top-right" richColors />
-    </QueryClientProvider>
+
+            <Route element={<ProtectedRoute />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/resumes" element={<Resumes />} />
+                <Route path="/jobs" element={<JobDiscovery />} />
+                <Route path="/applications" element={<Applications />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+        <Toaster position="top-right" richColors />
+      </QueryClientProvider>
+    </ErrorBoundary>
   )
 }
 

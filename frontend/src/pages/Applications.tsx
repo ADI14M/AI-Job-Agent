@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { apiClient } from "@/api/client"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Building2, MapPin, Calendar, BriefcaseBusiness } from "lucide-react"
+import { Building2, MapPin, Calendar, Briefcase } from "lucide-react"
 
 export default function Applications() {
   const { data: applications, isLoading } = useQuery({
@@ -70,7 +70,7 @@ export default function Applications() {
                           {app.applied_date}
                         </div>
                         <div className="flex items-center">
-                          <BriefcaseBusiness className="mr-1 h-3 w-3" />
+                          <Briefcase className="mr-1 h-3 w-3" />
                           Details
                         </div>
                       </div>

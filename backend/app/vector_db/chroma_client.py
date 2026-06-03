@@ -4,9 +4,8 @@ import os
 from langchain_openai import OpenAIEmbeddings
 
 # Initialize ChromaDB Client
-chroma_client = chromadb.HttpClient(
-    host=os.getenv("CHROMA_SERVER_HOST", "localhost"),
-    port=os.getenv("CHROMA_SERVER_HTTP_PORT", "8000"),
+chroma_client = chromadb.PersistentClient(
+    path="./chroma_db",
     settings=Settings(allow_reset=True, anonymized_telemetry=False)
 )
 
