@@ -1,6 +1,7 @@
 import os
 import shutil
 import logging
+from pathlib import Path
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.db.session import get_db
@@ -13,9 +14,9 @@ from app.api.deps import get_current_active_user
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-UPLOAD_DIR = "/app/data/resumes"
-# Locally, it will be in the cwd, so we ensure it exists
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+BASE_DIR = Path(__file__).resolve().parents[4]
+UPLOAD_DIR = BASE_DIR / "data" / "resumes"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 @router.post("/upload", response_model=ResumeResponse)
 async def upload_resume(
@@ -50,7 +51,6 @@ async def upload_resume(
         db_resume = Resume(
             user_id=user_id,
             filename=file.filename,
-            file_path=file_path,
             raw_text=raw_text,
             parsed_data=parsed_data.model_dump() if parsed_data else {}
         )

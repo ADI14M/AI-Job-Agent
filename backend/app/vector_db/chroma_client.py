@@ -3,9 +3,11 @@ from chromadb.config import Settings
 import os
 from langchain_openai import OpenAIEmbeddings
 
+from app.core.config import settings
+
 # Initialize ChromaDB Client
 chroma_client = chromadb.PersistentClient(
-    path="./chroma_db",
+    path=settings.CHROMA_DB_DIR,
     settings=Settings(allow_reset=True, anonymized_telemetry=False)
 )
 

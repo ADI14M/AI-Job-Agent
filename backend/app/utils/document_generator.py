@@ -2,9 +2,11 @@ import os
 from fpdf import FPDF
 from docx import Document
 from typing import Dict, Any
+from pathlib import Path
 
-EXPORT_DIR = "/app/data/exported_reports"
-os.makedirs(EXPORT_DIR, exist_ok=True)
+BASE_DIR = Path(__file__).resolve().parents[3]
+EXPORT_DIR = BASE_DIR / "data" / "exported_reports"
+EXPORT_DIR.mkdir(parents=True, exist_ok=True)
 
 class PDF(FPDF):
     def header(self):

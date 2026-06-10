@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import requests
+from pathlib import Path
 from bs4 import BeautifulSoup
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, Form
 from sqlalchemy.orm import Session
@@ -17,8 +18,9 @@ from app.api.deps import get_current_active_user
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-UPLOAD_DIR = "/app/data/sample_jds"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+BASE_DIR = Path(__file__).resolve().parents[4]
+UPLOAD_DIR = BASE_DIR / "data" / "sample_jds"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 def extract_text_from_url(url: str) -> str:
     try:

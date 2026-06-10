@@ -7,7 +7,7 @@ from app.db.models.job import Job
 from app.api.deps import get_current_active_user
 from app.schemas.job_discovery import JobDiscoveryRequest, JobDiscoveryResponse
 from app.agents.job_discovery_agent import JobDiscoveryAgent
-from app.services.job_service import process_and_store_job
+from app.agents.jd_agent import process_and_store_job
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

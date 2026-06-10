@@ -1,5 +1,10 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
+import os
+from dotenv import load_dotenv
+
+# Load .env into os.environ so external libraries like OpenAI/LangChain can access it
+load_dotenv()
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AI-Job-Agent"
@@ -20,11 +25,14 @@ class Settings(BaseSettings):
     # External APIs
     OPENAI_API_KEY: Optional[str] = None
     
+    # Environment Explicit Overrides
+    DATABASE_URL: Optional[str] = None
+    CHROMA_DB_DIR: str = "./chroma_data"
+    
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         # Default to SQLite for easy local execution without Postgres/Docker
-        import os
-        db_url = os.environ.get("DATABASE_URL")
+        db_url = self.DATABASE_URL
         if db_url:
             return db_url
         return "sqlite:///./job_agent.db"

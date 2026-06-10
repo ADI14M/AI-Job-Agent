@@ -9,6 +9,7 @@ app = FastAPI(
 )
 
 from app.db.session import Base, engine
+from app.db.models import user as m_user, resume as m_resume, job as m_job, application as m_app, cover_letter as m_cl, resume_version as m_rv, skill_gap as m_sg, ats as m_ats, notification as m_notif, user_preferences as m_up
 
 # Initialize Database (Auto-create tables for SQLite/Postgres)
 Base.metadata.create_all(bind=engine)

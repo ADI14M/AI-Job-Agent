@@ -11,7 +11,8 @@ export default function GlobalAuthListener() {
     const handleUnauthorized = () => {
       logout()
       toast.error('Session expired. Please log in again.')
-      navigate('/login')
+      // TEST MODE: Disabled auto-redirect to login
+      // navigate('/login')
     }
 
     window.addEventListener('auth:unauthorized', handleUnauthorized)
