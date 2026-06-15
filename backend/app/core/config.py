@@ -22,20 +22,36 @@ class Settings(BaseSettings):
     POSTGRES_DB: str = "ai_job_agent"
     POSTGRES_PORT: str = "5432"
     
-    # External APIs
-    OPENAI_API_KEY: Optional[str] = None
+    # ── LLM Provider ─────────────────────────────────────────────────────
+    USE_OLLAMA: bool = True
+
+    # Ollama settings (used when USE_OLLAMA=True)
+    OLLAMA_BASE_URL: str = "http://localhost:11434/v1"
+    OLLAMA_API_KEY: str = "ollama"          # Required by client, ignored by Ollama
+    LLM_MODEL: str = "qwen2.5:7b"         # Best model for M5 24GB
+    FAST_LLM_MODEL: str = "llama3.2:3b"    # Fast model for simple/routing tasks
+    EMBEDDING_MODEL: str = "nomic-embed-text"
+
+    # OpenAI settings (used when USE_OLLAMA=False)
+    OPENAI_API_KEY: str = ""
+    OPENAI_LLM_MODEL: str = "gpt-4o-mini"
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
+
+    @property
+    def active_llm_model(self) -> str:
+        return self.LLM_MODEL if self.USE_OLLAMA else self.OPENAI_LLM_MODEL
+
+    @property
+    def active_embedding_model(self) -> str:
+        return self.EMBEDDING_MODEL if self.USE_OLLAMA else self.OPENAI_EMBEDDING_MODEL
     
     # Environment Explicit Overrides
-    DATABASE_URL: Optional[str] = None
-    CHROMA_DB_DIR: str = "./chroma_data"
+    DATABASE_URL: str = "sqlite:///./jobagent.db"
+    CHROMA_PATH: str = "./chroma_db"
     
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
-        # Default to SQLite for easy local execution without Postgres/Docker
-        db_url = self.DATABASE_URL
-        if db_url:
-            return db_url
-        return "sqlite:///./job_agent.db"
+        return self.DATABASE_URL
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

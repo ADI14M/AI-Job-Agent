@@ -22,11 +22,24 @@ class BaseLLMProvider(ABC):
 
 
 class OpenAIProvider(BaseLLMProvider):
-    def __init__(self, model_name: str = "gpt-4o", temperature: float = 0.0):
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            logger.warning("OPENAI_API_KEY is not set. OpenAI calls will fail.")
-        self.llm = ChatOpenAI(model=model_name, temperature=temperature, api_key=self.api_key)
+    def __init__(self, model_name: str = None, temperature: float = 0.0):
+        from app.core.config import settings
+        
+        # Always use the globally active model setting
+        model = settings.active_llm_model
+        
+        if settings.USE_OLLAMA:
+            self.llm = ChatOpenAI(
+                model=model, 
+                temperature=temperature, 
+                api_key=settings.OLLAMA_API_KEY, 
+                base_url=settings.OLLAMA_BASE_URL
+            )
+        else:
+            self.api_key = settings.OPENAI_API_KEY
+            if not self.api_key:
+                logger.warning("OPENAI_API_KEY is not set. OpenAI calls will fail.")
+            self.llm = ChatOpenAI(model=model, temperature=temperature, api_key=self.api_key)
 
     def generate_structured_output(self, prompt: str, schema: Type[T]) -> Optional[T]:
         try:

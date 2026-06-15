@@ -24,3 +24,6 @@ numpy
 python-multipart
 fpdf2
 email-validator
+honcho
+aiosqlite
+httpx

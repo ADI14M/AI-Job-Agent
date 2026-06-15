@@ -35,6 +35,20 @@ An intelligent, full-stack platform that autonomously searches for jobs, evaluat
 
 ---
 
+## Local LLM Setup (macOS Apple Silicon)
+
+1. Install Ollama:
+   ```bash
+   brew install ollama
+   ```
+   *or download from https://ollama.com/download*
+
+2. Run `./start.sh` — it will pull all required models automatically.
+
+That's it. No API keys. No accounts. Fully offline.
+
+---
+
 ## 🚀 Getting Started
 
 Follow these instructions to get the project running locally on your machine.
