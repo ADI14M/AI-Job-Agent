@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.routes import auth, resume, jobs, matching, ats, skill_gap, resume_optimizer, cover_letter, job_discovery_v2, job_ranking, applications, automation, learning, notifications, analytics, orchestrator, decision, memory, agent
+from app.api.routes import auth, resume, jobs, matching, ats, skill_gap, resume_optimizer, cover_letter, job_discovery_v2, job_ranking, applications, automation, learning, notifications, analytics, orchestrator, decision, memory, agent, locations
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -45,6 +45,7 @@ app.include_router(job_ranking.router, prefix="/api/v1/job-ranking", tags=["job 
 app.include_router(automation.router, prefix="/api/v1/automation", tags=["automation"])
 app.include_router(learning.router, prefix="/api/v1/learning", tags=["learning"])
 app.include_router(notifications.router, prefix="/api/v1/notifications", tags=["notifications"])
+app.include_router(locations.router, prefix="/api/v1/locations", tags=["locations"])
 app.include_router(orchestrator.router, prefix="/api/v1/orchestrator", tags=["orchestrator"])
 
 @app.get("/")

@@ -6,8 +6,19 @@ import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { UploadCloud, FileText } from "lucide-react"
+import { UploadCloud, FileText, Download, Trash2, Eye } from "lucide-react"
 import { toast } from "sonner"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function Resumes() {
   const [file, setFile] = useState<File | null>(null)
@@ -56,6 +67,21 @@ export default function Resumes() {
       uploadMutation.mutate(file)
     }
   }
+
+  // Delete Mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await apiClient.delete(`/resume/${id}`)
+      return res.data
+    },
+    onSuccess: () => {
+      toast.success("Resume deleted successfully")
+      queryClient.invalidateQueries({ queryKey: ['resumes'] })
+    },
+    onError: () => {
+      toast.error("Failed to delete resume. Please try again.")
+    }
+  })
 
   return (
     <div className="space-y-6">
@@ -106,6 +132,7 @@ export default function Resumes() {
                   <TableHead>File Name</TableHead>
                   <TableHead>Parsed Name</TableHead>
                   <TableHead>Skills Extracted</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,6 +151,42 @@ export default function Resumes() {
                         {(r.parsed_data?.skills?.length || 0) > 3 && (
                           <Badge variant="outline">+{r.parsed_data.skills.length - 3}</Badge>
                         )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="ghost" size="icon" title="View">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" title="Download Original">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600 hover:bg-red-100" title="Delete">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete <strong>{r.filename}</strong> (Parsed as: {r.parsed_data?.name || "Unknown"}) and remove all its data including ATS evaluations, cover letters, and generated packages from our servers.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction 
+                                onClick={() => deleteMutation.mutate(r.id)}
+                                className="bg-red-500 hover:bg-red-600"
+                                disabled={deleteMutation.isPending}
+                              >
+                                Delete Resume
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>

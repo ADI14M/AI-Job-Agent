@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, MapPin, DollarSign, Building2, ExternalLink, Calendar, Briefcase, Globe } from "lucide-react"
 import { toast } from "sonner"
+import { LocationAutocomplete } from "@/components/location-autocomplete"
 
 export default function JobDiscovery() {
   const [keywords, setKeywords] = useState("Software Engineer")
@@ -63,7 +64,7 @@ export default function JobDiscovery() {
             </div>
             <div className="space-y-2">
               <Label>Location</Label>
-              <Input value={location} onChange={e => setLocation(e.target.value)} placeholder="e.g. New York, NY" />
+              <LocationAutocomplete value={location} onChange={setLocation} />
             </div>
             <div className="space-y-2">
               <Label>Experience</Label>
