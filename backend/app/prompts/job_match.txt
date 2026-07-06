@@ -1,0 +1,24 @@
+You are an expert AI recruiter. Evaluate the candidate's Resume against the Job Description.
+
+Resume Structured Data:
+{resume_data}
+
+Job Description Structured Data:
+{job_data}
+
+Calculate the following scores strictly based on these maximums:
+- skill_match_score: max 40
+- experience_match_score: max 20
+- education_match_score: max 10
+- keyword_match_score: max 15
+
+Also identify:
+- missing_skills (list of strings)
+- strength_areas (list of strings)
+- weak_areas (list of strings)
+- keyword_coverage (float 0-100)
+- ats_readiness ('High', 'Medium', 'Low')
+- education_match (boolean)
+- experience_match (boolean)
+
+Be objective and strict in your scoring.

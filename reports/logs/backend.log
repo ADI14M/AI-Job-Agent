@@ -1,0 +1,66 @@
+2026-07-02 19:06:10,715 - ai_service - INFO - Initializing AIService with Chat model qwen2.5:7b and Embed model nomic-embed-text
+2026-07-02 19:06:10,991 - system - INFO - Registered Job Provider: LinkedIn
+2026-07-02 19:06:10,991 - system - INFO - Registered Job Provider: Wellfound
+2026-07-02 19:06:10,992 - system - INFO - Registered Job Provider: Greenhouse
+INFO:     Started server process [63588]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-07-02 19:06:14,092 - system - INFO - PERFORMANCE: POST /api/v1/auth/register completed in 0.1979 seconds
+INFO:     127.0.0.1:50816 - "POST /api/v1/auth/register HTTP/1.1" 200 OK
+2026-07-02 19:06:14,278 - system - INFO - PERFORMANCE: POST /api/v1/auth/login completed in 0.1855 seconds
+INFO:     127.0.0.1:50817 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-07-02 19:06:14,310 - ai_service - INFO - Generating structured output (ResumeParsedData)
+2026-07-02 19:06:15,620 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:15,758 - system - INFO - PERFORMANCE: POST /api/v1/resume/upload completed in 1.4545 seconds
+INFO:     127.0.0.1:50818 - "POST /api/v1/resume/upload HTTP/1.1" 200 OK
+2026-07-02 19:06:15,765 - system - INFO - Provider linkedin started.
+2026-07-02 19:06:15,765 - system - INFO - Provider linkedin finished. Found 2 jobs.
+2026-07-02 19:06:15,765 - system - INFO - Provider greenhouse started.
+2026-07-02 19:06:15,765 - system - INFO - Provider greenhouse finished. Found 2 jobs.
+2026-07-02 19:06:15,765 - system - INFO - Provider wellfound started.
+2026-07-02 19:06:15,765 - system - INFO - Provider wellfound finished. Found 2 jobs.
+2026-07-02 19:06:15,765 - system - ERROR - Provider indeed failed: Provider indeed is not registered.
+2026-07-02 19:06:17,225 - system - ERROR - Failed to compute match score: Connection error.
+2026-07-02 19:06:18,713 - system - ERROR - Failed to compute match score: Connection error.
+2026-07-02 19:06:20,067 - system - ERROR - Failed to compute match score: Connection error.
+2026-07-02 19:06:21,392 - system - ERROR - Failed to compute match score: Connection error.
+2026-07-02 19:06:22,845 - system - ERROR - Failed to compute match score: Connection error.
+2026-07-02 19:06:24,412 - system - ERROR - Failed to compute match score: Connection error.
+2026-07-02 19:06:24,517 - system - INFO - Discovery Engine complete. Found 6, new: 6, duplicates: 0
+2026-07-02 19:06:24,517 - system - INFO - PERFORMANCE: POST /api/v1/job_discovery/search completed in 8.7579 seconds
+INFO:     127.0.0.1:50825 - "POST /api/v1/job_discovery/search HTTP/1.1" 200 OK
+2026-07-02 19:06:24,521 - ai_service - INFO - Generating structured output (JobParsedData)
+2026-07-02 19:06:25,716 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:25,807 - system - INFO - PERFORMANCE: POST /api/v1/jobs/upload completed in 1.2879 seconds
+INFO:     127.0.0.1:50862 - "POST /api/v1/jobs/upload HTTP/1.1" 200 OK
+2026-07-02 19:06:25,817 - system - INFO - Starting Decision Engine for Job 1 and Resume 1
+2026-07-02 19:06:25,817 - system - INFO - Running ATS Scorer...
+2026-07-02 19:06:25,818 - ai_service - INFO - Generating structured output (ATSEvaluation)
+2026-07-02 19:06:27,254 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:27,254 - system - INFO - Running Skill Gap Analyzer...
+2026-07-02 19:06:27,255 - ai_service - INFO - Generating structured output (SkillGap)
+2026-07-02 19:06:28,664 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:28,665 - ai_service - INFO - Generating structured output (DecisionResult)
+2026-07-02 19:06:29,877 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:29,878 - system - INFO - Running Resume Optimizer...
+2026-07-02 19:06:29,878 - ai_service - INFO - Generating structured output (ResumeOptimizationData)
+2026-07-02 19:06:31,332 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:31,333 - system - INFO - Running Cover Letter Generator...
+2026-07-02 19:06:31,333 - ai_service - INFO - Generating structured output (CoverLetterData)
+2026-07-02 19:06:32,557 - ai_service - WARNING - Demo Mode Fallback triggered due to AI error: Connection error.
+2026-07-02 19:06:32,605 - system - INFO - Decision Engine completed in 6.79 seconds.
+2026-07-02 19:06:32,606 - system - INFO - PERFORMANCE: POST /api/v1/decision/run completed in 6.7980 seconds
+INFO:     127.0.0.1:50873 - "POST /api/v1/decision/run HTTP/1.1" 200 OK
+2026-07-02 19:06:32,694 - system - INFO - PERFORMANCE: POST /api/v1/memory/search completed in 0.0859 seconds
+INFO:     127.0.0.1:50905 - "POST /api/v1/memory/search HTTP/1.1" 200 OK
+2026-07-02 19:06:32,698 - system - INFO - Agent Scheduler started.
+2026-07-02 19:06:32,698 - system - INFO - Scheduled hourly planner for user 1
+2026-07-02 19:06:32,698 - system - INFO - PERFORMANCE: POST /api/v1/agent/schedule completed in 0.0030 seconds
+INFO:     127.0.0.1:50906 - "POST /api/v1/agent/schedule HTTP/1.1" 200 OK
+2026-07-02 19:06:33,325 - system - INFO - PERFORMANCE: GET /api/v1/analytics/dashboard completed in 0.0038 seconds
+INFO:     127.0.0.1:50907 - "GET /api/v1/analytics/dashboard HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [63588]

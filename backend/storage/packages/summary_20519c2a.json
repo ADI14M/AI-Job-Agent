@@ -1,0 +1,61 @@
+{
+    "decision": {
+        "recommendation": "Maybe",
+        "overall_score": 65,
+        "reasoning": "The candidate's ATS score of 65/100 indicates a moderate fit for the job. However, there are several missing skills that could impact their suitability.",
+        "pros": [
+            "The candidate has some relevant experience as indicated by the ATS score.",
+            "They may be trainable in the missing skills if they have a strong learning ability and willingness to learn."
+        ],
+        "cons": [
+            "There is a significant gap in key technical skills such as TypeScript, React, PostgreSQL, Docker, and AWS, which are likely essential for the role.",
+            "The candidate's current skill set might not fully meet the job requirements without additional training or experience."
+        ],
+        "missing_skills": [
+            "TypeScript",
+            "React",
+            "PostgreSQL",
+            "Docker",
+            "AWS"
+        ],
+        "estimated_interview_probability": "{ 'low': 30, 'medium': 50, 'high': 20 }",
+        "estimated_resume_strength": "{ 'weak': 40, 'moderate': 50, 'strong': 10 }",
+        "estimated_skill_match": "{ 'poor': 60, 'fair': 30, 'good': 10 }"
+    },
+    "ats_evaluation": {
+        "overall_score": 65,
+        "formatting_score": 70,
+        "keywords_score": 40,
+        "experience_score": 20,
+        "projects_score": 10,
+        "skills_score": 80,
+        "education_score": 0,
+        "achievements_score": 0,
+        "deductions": [
+            "Lack of relevant experience and projects",
+            "Missing education section, which is crucial for early-stage startups",
+            "Irrelevant skills (TypeScript, React) to the job description",
+            "No achievements or certifications mentioned"
+        ]
+    },
+    "skill_gap": {
+        "existing_skills": [
+            "Python",
+            "Machine Learning"
+        ],
+        "missing_skills": [
+            "TypeScript",
+            "React",
+            "PostgreSQL",
+            "Docker",
+            "AWS"
+        ],
+        "recommended_learning_path": [
+            "TypeScript and React (Frontend Development)",
+            "PostgreSQL (Database Management)",
+            "Docker (Containerization)",
+            "AWS (Cloud Services)"
+        ],
+        "estimated_learning_time": "The estimated learning time for the missing skills can vary based on dedication, but here's a rough guideline:\n- TypeScript and React: Approximately 2-3 months of dedicated study.\n- PostgreSQL: Around 1 month to get comfortable with basic operations and queries.\n- Docker: About 1-2 weeks depending on how quickly you grasp the concepts.\n- AWS: This can take several months, as it covers a wide range of services. A good starting point would be to focus on essential services like EC2, S3, RDS, and Lambda."
+    }
+}

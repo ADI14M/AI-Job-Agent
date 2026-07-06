@@ -73,7 +73,7 @@ async def upload_job(
         raise HTTPException(status_code=400, detail="Must provide either a file, raw_text, or apply_url")
         
     try:
-        parsed_data, doc_id = process_and_store_job(jd_text, provider_name=provider)
+        parsed_data, doc_id = process_and_store_job(jd_text)
         
         db_job = Job(
             user_id=current_user.id,

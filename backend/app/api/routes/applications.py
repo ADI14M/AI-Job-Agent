@@ -85,6 +85,8 @@ def get_approval_data(
     from app.db.models.cover_letter import CoverLetter
     from app.schemas.approval import ApprovalDataResponse
     
+    from app.db.models.application_package import ApplicationPackage
+    
     app = db.query(Application).filter(Application.id == app_id, Application.user_id == current_user.id).first()
     if not app:
         raise HTTPException(status_code=404, detail="Application not found")
@@ -93,17 +95,21 @@ def get_approval_data(
     resume = db.query(Resume).filter(Resume.id == app.resume_id).first() if app.resume_id else None
     cover_letter = db.query(CoverLetter).filter(CoverLetter.id == app.cover_letter_id).first() if app.cover_letter_id else None
     
-    # Mocking Match and ATS Scores for the approval dashboard
-    mock_match_score = 0.88
-    mock_ats_score = 0.92
+    pkg = db.query(ApplicationPackage).filter(
+        ApplicationPackage.job_id == app.job_id, 
+        ApplicationPackage.user_id == current_user.id
+    ).first()
+    
+    real_match_score = pkg.ats_score / 100.0 if pkg and pkg.ats_score else 0.0
+    real_ats_score = pkg.ats_score / 100.0 if pkg and pkg.ats_score else 0.0
     
     return ApprovalDataResponse(
         application_id=app.id,
         job_title=job.title if job else "Unknown",
         company=job.company if job else "Unknown",
         job_description_snippet=job.raw_text[:200] + "..." if job and job.raw_text else "",
-        match_score=mock_match_score,
-        ats_score=mock_ats_score,
+        match_score=real_match_score,
+        ats_score=real_ats_score,
         resume_summary=resume.parsed_data.get("summary", "")[:200] + "..." if resume and resume.parsed_data else None,
         cover_letter_snippet=cover_letter.content[:200] + "..." if cover_letter else None,
         status=app.status.value

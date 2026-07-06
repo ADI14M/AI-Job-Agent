@@ -14,6 +14,9 @@ import Dashboard from "@/pages/Dashboard"
 import Resumes from "@/pages/Resumes"
 import JobDiscovery from "@/pages/JobDiscovery"
 import Applications from "@/pages/Applications"
+import ApplicationPackage from "@/pages/ApplicationPackage"
+import CareerMemory from "@/pages/CareerMemory"
+import AutomationDashboard from "@/pages/AutomationDashboard"
 import Settings from "@/pages/Settings"
 
 const queryClient = new QueryClient()
@@ -36,6 +39,9 @@ function App() {
                 <Route path="/resumes" element={<Resumes />} />
                 <Route path="/jobs" element={<JobDiscovery />} />
                 <Route path="/applications" element={<Applications />} />
+                <Route path="/application-package" element={<ApplicationPackage />} />
+                <Route path="/career-memory" element={<CareerMemory />} />
+                <Route path="/automation" element={<AutomationDashboard />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Route>

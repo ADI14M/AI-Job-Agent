@@ -1,29 +1,27 @@
-import os
 import pdfplumber
 import docx
-import logging
-
-logger = logging.getLogger(__name__)
+from app.core.logger import system_logger
+from app.utils.file_utils import get_file_extension
+from app.utils.text_utils import clean_text
 
 def extract_text_from_pdf(file_path: str) -> str:
     text = ""
     try:
         with pdfplumber.open(file_path) as pdf:
             for page in pdf.pages:
-                page_text = page.extract_text(layout=True)  # layout=True helps with columns
+                page_text = page.extract_text(layout=True)
                 if page_text:
                     text += page_text + "\n"
                 
-                # Also try extracting tables to preserve tabular data structures
                 tables = page.extract_tables()
                 if tables:
                     for table in tables:
                         for row in table:
                             text += " | ".join([str(cell) for cell in row if cell]) + "\n"
     except Exception as e:
-        logger.error(f"Error extracting text from PDF {file_path}: {e}")
+        system_logger.error(f"Error extracting text from PDF {file_path}: {e}")
         raise ValueError(f"Failed to read PDF: {e}")
-    return text.strip()
+    return clean_text(text)
 
 def extract_text_from_docx(file_path: str) -> str:
     text = ""
@@ -37,16 +35,15 @@ def extract_text_from_docx(file_path: str) -> str:
                 row_text = " | ".join([cell.text for cell in row.cells])
                 text += row_text + "\n"
     except Exception as e:
-        logger.error(f"Error extracting text from DOCX {file_path}: {e}")
+        system_logger.error(f"Error extracting text from DOCX {file_path}: {e}")
         raise ValueError(f"Failed to read DOCX: {e}")
-    return text.strip()
+    return clean_text(text)
 
 def extract_text(file_path: str) -> str:
-    ext = os.path.splitext(file_path)[1].lower()
+    ext = get_file_extension(file_path)
     if ext == '.pdf':
         return extract_text_from_pdf(file_path)
     elif ext in ['.docx', '.doc']:
-        # Note: python-docx only supports .docx, .doc might fail, but let's try
         return extract_text_from_docx(file_path)
     else:
         raise ValueError(f"Unsupported file extension: {ext}")

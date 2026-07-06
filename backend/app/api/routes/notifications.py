@@ -11,12 +11,17 @@ from app.schemas.notification import NotificationCreate, NotificationResponse
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+import os
+
 def send_email_mock(email: str, title: str, message: str):
-    # This simulates a mock email sender (e.g. SendGrid or SES)
-    logger.info(f"--- MOCK EMAIL TO {email} ---")
-    logger.info(f"SUBJECT: {title}")
-    logger.info(f"BODY: {message}")
-    logger.info("-----------------------------")
+    # Simulates an SMTP outbox by appending to a local file
+    os.makedirs("storage", exist_ok=True)
+    with open("storage/emails.log", "a") as f:
+        f.write(f"--- MOCK EMAIL TO {email} ---\n")
+        f.write(f"SUBJECT: {title}\n")
+        f.write(f"BODY: {message}\n")
+        f.write("-----------------------------\n")
+    logger.info(f"Email successfully dispatched to SMTP outbox for {email}")
 
 @router.post("/", response_model=NotificationResponse)
 def create_notification(

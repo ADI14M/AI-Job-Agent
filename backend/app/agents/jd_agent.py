@@ -1,42 +1,30 @@
 import json
-import logging
 import uuid
 from typing import Optional
 from app.schemas.job import JobParsedData
 from app.vector_db.chroma_client import get_job_collection
-from app.core.llm_provider import LLMFactory
+from app.services.ai_service import ai_service
+from app.utils.prompt_loader import PromptLoader
+from app.core.logger import system_logger
 
-logger = logging.getLogger(__name__)
-
-def parse_job_description(text: str, provider_name: str = "openai") -> Optional[JobParsedData]:
-    llm_provider = LLMFactory.get_provider(provider_name)
-    
-    prompt = f"""
-    You are an expert AI Job Description analyzer.
-    Extract the following job description text into a highly structured format.
-    Ensure required skills, preferred skills, and experience requirements are accurately captured.
-    If a field is missing or not mentioned, leave it empty or omit it. Do not guess.
-    
-    Job Description Text:
-    {text}
-    """
+def parse_job_description(text: str) -> Optional[JobParsedData]:
+    prompt = PromptLoader.load("jd_parse.txt", text=text)
     
     try:
-        parsed_data = llm_provider.generate_structured_output(prompt, JobParsedData)
+        parsed_data = ai_service.generate_structured_output(prompt, JobParsedData, use_fast_model=False)
         return parsed_data
     except Exception as e:
-        logger.error(f"Error parsing job description via {provider_name}: {e}")
+        system_logger.error(f"Error parsing job description via ai_service: {e}")
         return None
 
-def process_and_store_job(raw_text: str, provider_name: str = "openai"):
+def process_and_store_job(raw_text: str):
     if not raw_text.strip():
         raise ValueError("Cannot parse an empty job description.")
         
-    parsed_data = parse_job_description(raw_text, provider_name)
+    parsed_data = parse_job_description(raw_text)
     if not parsed_data:
         raise ValueError("Failed to parse job description data.")
         
-    # Prepare ChromaDB embedding text
     try:
         document_text = (
             f"Title: {parsed_data.title}\n"
@@ -54,7 +42,7 @@ def process_and_store_job(raw_text: str, provider_name: str = "openai"):
             ids=[doc_id]
         )
     except Exception as e:
-        logger.error(f"Failed to embed and store JD in ChromaDB: {e}")
+        system_logger.error(f"Failed to embed and store JD in ChromaDB: {e}")
         doc_id = "error_embedding"
     
     return parsed_data, doc_id

@@ -4,39 +4,31 @@ import uuid
 from typing import Optional
 from app.schemas.resume import ResumeParsedData
 from app.vector_db.chroma_client import get_resume_collection
-from app.core.llm_provider import LLMFactory
+
 from app.utils.text_extraction import extract_text
 
-logger = logging.getLogger(__name__)
+from app.services.ai_service import ai_service
+from app.utils.prompt_loader import PromptLoader
+from app.core.logger import system_logger
 
-def parse_resume_text(text: str, provider_name: str = "openai") -> Optional[ResumeParsedData]:
-    llm_provider = LLMFactory.get_provider(provider_name)
-    
-    prompt = f"""
-    You are an expert AI recruiter and resume parser.
-    Extract the following resume text into a highly structured format.
-    Ensure all skills, experiences, and education are accurately captured.
-    Do NOT invent any information. If a field is missing, leave it empty or omit it.
-    
-    Resume Text:
-    {text}
-    """
+def parse_resume_text(text: str) -> Optional[ResumeParsedData]:
+    prompt = PromptLoader.load("resume_parse.txt", text=text)
     
     try:
-        parsed_data = llm_provider.generate_structured_output(prompt, ResumeParsedData)
+        parsed_data = ai_service.generate_structured_output(prompt, ResumeParsedData, use_fast_model=False)
         return parsed_data
     except Exception as e:
-        logger.error(f"Error parsing resume via {provider_name}: {e}")
+        system_logger.error(f"Error parsing resume via ai_service: {e}")
         return None
 
-def process_and_store_resume(file_path: str, user_id: int, provider_name: str = "openai"):
+def process_and_store_resume(file_path: str, user_id: int):
     # 1. Extract Text robustly
     raw_text = extract_text(file_path)
     if not raw_text.strip():
         raise ValueError("Could not extract text from the provided document.")
         
     # 2. Parse into structured data using LLM Abstraction
-    parsed_data = parse_resume_text(raw_text, provider_name)
+    parsed_data = parse_resume_text(raw_text)
     if not parsed_data:
         raise ValueError("Failed to parse resume data using AI provider.")
         
@@ -52,7 +44,7 @@ def process_and_store_resume(file_path: str, user_id: int, provider_name: str = 
             ids=[doc_id]
         )
     except Exception as e:
-        logger.error(f"Failed to embed and store in ChromaDB: {e}")
+        system_logger.error(f"Failed to embed and store in ChromaDB: {e}")
         doc_id = "error_embedding"
     
     return raw_text, parsed_data, doc_id

@@ -1,0 +1,3 @@
+```mermaid
+stateDiagram-v2; DISCOVERED --> MATCHED; MATCHED --> READY_FOR_REVIEW; READY_FOR_REVIEW --> SUBMITTED;
+```

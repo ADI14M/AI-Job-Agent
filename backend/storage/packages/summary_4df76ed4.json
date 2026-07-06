@@ -1,0 +1,39 @@
+{
+    "decision": {
+        "recommendation": "Apply",
+        "overall_score": 95,
+        "reasoning": "Demo Match",
+        "pros": [
+            "Python"
+        ],
+        "cons": [],
+        "missing_skills": [],
+        "estimated_interview_probability": "High",
+        "estimated_resume_strength": "High",
+        "estimated_skill_match": "High"
+    },
+    "ats_evaluation": {
+        "overall_score": 95,
+        "formatting_score": 95,
+        "keywords_score": 95,
+        "experience_score": 95,
+        "projects_score": 95,
+        "skills_score": 95,
+        "education_score": 95,
+        "achievements_score": 95,
+        "deductions": []
+    },
+    "skill_gap": {
+        "existing_skills": [
+            "Python",
+            "React"
+        ],
+        "missing_skills": [
+            "Docker"
+        ],
+        "recommended_learning_path": [
+            "Learn Docker basics"
+        ],
+        "estimated_learning_time": "1 week"
+    }
+}

@@ -27,3 +27,6 @@ email-validator
 honcho
 aiosqlite
 httpx
+rapidfuzz
+apscheduler
+psutil

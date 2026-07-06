@@ -3,7 +3,7 @@ import asyncio
 from typing import List
 from sqlalchemy.orm import Session
 from app.db.models.user import User
-from app.agents.job_discovery_agent import JobDiscoveryAgent
+from app.job_discovery.discovery_engine import DiscoveryEngine
 from app.agents.job_ranking_agent import JobRankingAgent
 from app.db.models.job import Job
 from app.db.models.resume import Resume
@@ -21,7 +21,6 @@ class AgentOrchestrator:
     """
     def __init__(self, db: Session):
         self.db = db
-        self.discovery = JobDiscoveryAgent()
         self.ranking = JobRankingAgent()
         
     async def run_autonomous_loop(self, user_id: int):
@@ -38,29 +37,34 @@ class AgentOrchestrator:
                 return
                 
         # 1. Discover
-        discovered_jobs = self.discovery.run_discovery(
+        discovery_engine = DiscoveryEngine(self.db, user_id)
+        discovered_jobs = discovery_engine.run(
             query="Software Engineer", 
             location="Remote", 
-            platforms=["linkedin", "indeed"], 
+            providers=["linkedin", "indeed"], 
             limit=5
         )
         
-        # Save to DB
+        # In the new engine, jobs are saved to JobDiscovery table, not Job table directly.
+        # So we adapt the orchestrator to read from the Discovery results.
         saved_jobs = []
-        for dj in discovered_jobs:
-            existing = self.db.query(Job).filter(Job.apply_url == dj.apply_url, Job.user_id == user_id).first()
-            if not existing:
-                db_job = Job(
-                    user_id=user_id,
-                    apply_url=dj.apply_url,
-                    raw_text=dj.description,
-                    title=dj.title,
-                    company=dj.company,
-                    location=dj.location,
-                    parsed_data={}
-                )
-                self.db.add(db_job)
-                saved_jobs.append(db_job)
+        for job_data in discovered_jobs.get("matched_jobs", []):
+            db_id = job_data.get("id")
+            if db_id:
+                # Mock transforming it to the primary Job table for application workflows
+                existing = self.db.query(Job).filter(Job.apply_url == job_data.get("url"), Job.user_id == user_id).first()
+                if not existing:
+                    db_job = Job(
+                        user_id=user_id,
+                        apply_url=job_data.get("url", ""),
+                        raw_text=job_data.get("description", ""),
+                        title=job_data.get("title", ""),
+                        company=job_data.get("company", ""),
+                        location=job_data.get("location", ""),
+                        parsed_data={}
+                    )
+                    self.db.add(db_job)
+                    saved_jobs.append(db_job)
                 
         self.db.commit()
         

@@ -20,7 +20,7 @@ export default function Resumes() {
       // Assuming a GET endpoint exists or will exist. 
       // If not, we'll mock it for now.
       try {
-        const res = await apiClient.get('/resume/')
+        const res = await apiClient.get('/resume')
         return res.data
       } catch (e) {
         return []
@@ -106,7 +106,6 @@ export default function Resumes() {
                   <TableHead>File Name</TableHead>
                   <TableHead>Parsed Name</TableHead>
                   <TableHead>Skills Extracted</TableHead>
-                  <TableHead>Primary</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -114,7 +113,7 @@ export default function Resumes() {
                   <TableRow key={r.id}>
                     <TableCell className="font-medium flex items-center gap-2">
                       <FileText className="h-4 w-4 text-blue-500" />
-                      {r.file_path.split('/').pop()}
+                      {r.filename}
                     </TableCell>
                     <TableCell>{r.parsed_data?.name || "Unknown"}</TableCell>
                     <TableCell>
@@ -126,9 +125,6 @@ export default function Resumes() {
                           <Badge variant="outline">+{r.parsed_data.skills.length - 3}</Badge>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      {r.is_primary ? <Badge>Primary</Badge> : <Badge variant="outline">Alternative</Badge>}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,0 +1,89 @@
+
+> ai-job-agent-frontend@0.0.0 dev
+> vite
+
+
+  VITE v5.4.21  ready in 101 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+7:06:12 PM [vite] Pre-transform error: Failed to resolve import "@/components/ui/checkbox" from "src/pages/JobDiscovery.tsx". Does the file exist?
+7:06:12 PM [vite] warning: Duplicate "variant" attribute in JSX element
+155|                        <CheckCircle className="w-4 h-4 mr-2" /> Approve & Submit
+156|                      </Button>
+157|                      <Button variant="destructive" variant="outline">
+   |                                                    ^
+158|                        <XCircle className="w-4 h-4 mr-2" /> Reject & Cancel
+159|                      </Button>
+
+  Plugin: vite:esbuild
+  File: /Users/adi/Documents/Coding/AI-Job-Agent/frontend/src/pages/AutomationDashboard.tsx
+7:06:12 PM [vite] Pre-transform error: Failed to resolve import "@/components/ui/tabs" from "src/pages/ApplicationPackage.tsx". Does the file exist?
+7:06:12 PM [vite] Pre-transform error: Failed to resolve import "@/components/ui/tabs" from "src/pages/AutomationDashboard.tsx". Does the file exist?
+7:06:33 PM [vite] Internal server error: Failed to resolve import "@/components/ui/checkbox" from "src/pages/JobDiscovery.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/adi/Documents/Coding/AI-Job-Agent/frontend/src/pages/JobDiscovery.tsx:9:25
+  24 |  import { Input } from "@/components/ui/input";
+  25 |  import { Label } from "@/components/ui/label";
+  26 |  import { Checkbox } from "@/components/ui/checkbox";
+     |                            ^
+  27 |  import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+  28 |  import { Search, MapPin, DollarSign, Building2, ExternalLink, Calendar, Briefcase, Globe } from "lucide-react";
+      at TransformPluginContext._formatError (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 11)
+      at async TransformPluginContext.transform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+7:06:33 PM [vite] warning: Duplicate "variant" attribute in JSX element
+155|                        <CheckCircle className="w-4 h-4 mr-2" /> Approve & Submit
+156|                      </Button>
+157|                      <Button variant="destructive" variant="outline">
+   |                                                    ^
+158|                        <XCircle className="w-4 h-4 mr-2" /> Reject & Cancel
+159|                      </Button>
+
+  Plugin: vite:esbuild
+  File: /Users/adi/Documents/Coding/AI-Job-Agent/frontend/src/pages/AutomationDashboard.tsx
+7:06:33 PM [vite] Internal server error: Failed to resolve import "@/components/ui/tabs" from "src/pages/AutomationDashboard.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/adi/Documents/Coding/AI-Job-Agent/frontend/src/pages/AutomationDashboard.tsx:7:57
+  22 |  import { Badge } from "@/components/ui/badge";
+  23 |  import { Button } from "@/components/ui/button";
+  24 |  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+     |                                                            ^
+  25 |  import { Play, Pause, Settings, Activity, CheckCircle, XCircle, Clock } from "lucide-react";
+  26 |  import { toast } from "sonner";
+      at TransformPluginContext._formatError (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+7:06:33 PM [vite] Internal server error: Failed to resolve import "@/components/ui/tabs" from "src/pages/ApplicationPackage.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/adi/Documents/Coding/AI-Job-Agent/frontend/src/pages/ApplicationPackage.tsx:7:57
+  22 |  import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+  23 |  import { Badge } from "@/components/ui/badge";
+  24 |  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+     |                                                            ^
+  25 |  import { FileText, Download, Briefcase, Target, CheckCircle2, XCircle } from "lucide-react";
+  26 |  import { toast } from "sonner";
+      at TransformPluginContext._formatError (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at normalizeUrl (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+      at async Promise.all (index 9)
+      at async TransformPluginContext.transform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+      at async PluginContainer.transform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///Users/adi/Documents/Coding/AI-Job-Agent/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)

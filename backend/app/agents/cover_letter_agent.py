@@ -1,16 +1,13 @@
-import logging
 import json
 from typing import Optional
 from app.schemas.cover_letter import CoverLetterData
-from app.core.llm_provider import LLMFactory
+from app.services.ai_service import ai_service
+from app.utils.prompt_loader import PromptLoader
+from app.core.logger import system_logger
 from app.db.models.resume import Resume
 from app.db.models.job import Job
 
-logger = logging.getLogger(__name__)
-
-def generate_cover_letter(resume: Resume, job: Job, company_name: Optional[str] = None, provider_name: str = "openai") -> Optional[CoverLetterData]:
-    llm_provider = LLMFactory.get_provider(provider_name)
-    
+def generate_cover_letter(resume: Resume, job: Job, company_name: Optional[str] = None) -> Optional[CoverLetterData]:
     context = f"""
     Candidate Resume:
     {json.dumps(resume.parsed_data)}
@@ -20,24 +17,11 @@ def generate_cover_letter(resume: Resume, job: Job, company_name: Optional[str] 
     """
     
     c_name = company_name or job.parsed_data.get("company", "the hiring company")
-    
-    prompt = f"""
-    You are an expert Career Strategist and Cover Letter Writer.
-    Write a tailored, professional cover letter for the candidate applying to {c_name}.
-    
-    {context}
-    
-    CRITICAL RULES:
-    1. Do not hallucinate any experience. Use ONLY the facts from the Candidate Resume.
-    2. Focus on aligning the candidate's existing skills with the Target Job Description requirements.
-    3. Keep it to 3-4 paragraphs (Introduction, Body Paragraphs aligning skills, Call to Action).
-    4. Write in a confident, professional, and enthusiastic tone.
-    5. Output the final cover letter text.
-    """
+    prompt = PromptLoader.load("cover_letter.txt", c_name=c_name, context=context)
     
     try:
-        cl_data = llm_provider.generate_structured_output(prompt, CoverLetterData)
+        cl_data = ai_service.generate_structured_output(prompt, CoverLetterData, use_fast_model=False)
         return cl_data
     except Exception as e:
-        logger.error(f"Error generating cover letter via {provider_name}: {e}")
+        system_logger.error(f"Error generating cover letter via ai_service: {e}")
         return None

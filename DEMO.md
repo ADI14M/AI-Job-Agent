@@ -18,9 +18,7 @@ Ensure you have bash and python installed, then run from the root directory:
 ./demo.sh
 ```
 
-### What happens?
-1. **Cleanup**: Old demo databases (`demo.db`, `demo_chroma_db/`) are deleted.
-2. **Boot**: FastAPI and Vite are spawned in the background on ports `8000` and `5173`.
-3. **Execution**: The `demo.py` orchestration script runs sequentially through the application pipeline. It uses `IS_DEMO_MODE=True` to mock external API and LLM calls, ensuring 100% deterministic local tests.
-4. **Reports**: Once complete, validation reports are written to the `reports/` folder.
-5. **Teardown**: The background web servers are gracefully terminated.
+### What Does the Core System Do?
+1. **Real ATS Discovery**: Scrapes Greenhouse, Lever, and Ashby JSON APIs directly using target company lists.
+2. **Real Decision Engine**: Embeds job descriptions with local Ollama embeddings into ChromaDB, followed by an LLM secondary re-ranking pass.
+3. **Application Automation**: Uses Playwright to traverse actual ATS DOM trees, map UserProfiles to inputs, and execute real submissions.

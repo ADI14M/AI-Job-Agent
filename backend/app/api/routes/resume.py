@@ -2,6 +2,7 @@ import os
 import shutil
 import logging
 from pathlib import Path
+from typing import List
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.db.session import get_db
@@ -17,6 +18,15 @@ router = APIRouter()
 BASE_DIR = Path(__file__).resolve().parents[4]
 UPLOAD_DIR = BASE_DIR / "data" / "resumes"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+@router.get("", response_model=List[ResumeResponse])
+def list_resumes(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Return all resumes uploaded by the current user."""
+    resumes = db.query(Resume).filter(Resume.user_id == current_user.id).order_by(Resume.created_at.desc()).all()
+    return resumes
 
 @router.post("/upload", response_model=ResumeResponse)
 async def upload_resume(
@@ -45,7 +55,7 @@ async def upload_resume(
         user_id = current_user.id  
         
         # Process resume via LLM and VectorDB
-        raw_text, parsed_data, doc_id = process_and_store_resume(file_path, user_id, provider_name=provider)
+        raw_text, parsed_data, doc_id = process_and_store_resume(file_path, user_id)
         
         # Save to PostgreSQL
         db_resume = Resume(
